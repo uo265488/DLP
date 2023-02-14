@@ -3,6 +3,7 @@ package program.statement;
 import program.AbstractASTNode;
 import program.expression.Expression;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class While extends AbstractASTNode implements Statement {
@@ -13,7 +14,7 @@ public class While extends AbstractASTNode implements Statement {
     public While(int line, int column, Expression condition, List<Statement> body) {
         super(line, column);
 
-        this.body = body;
+        this.body = new ArrayList<>(body);
         this.condition = condition;
     }
 }

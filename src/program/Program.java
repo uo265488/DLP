@@ -2,6 +2,7 @@ package program;
 
 import program.definition.Definition;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Program extends AbstractASTNode {
@@ -12,6 +13,6 @@ public class Program extends AbstractASTNode {
     public Program(int line, int column, List<Definition> definitionList) {
         super(line, column);
 
-        this.definitionList = definitionList;
+        this.definitionList = new ArrayList(definitionList);
     }
 }

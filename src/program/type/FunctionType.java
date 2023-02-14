@@ -3,6 +3,7 @@ package program.type;
 import program.AbstractASTNode;
 import program.definition.VariableDefinition;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class FunctionType extends AbstractASTNode implements Type {
@@ -12,5 +13,7 @@ public class FunctionType extends AbstractASTNode implements Type {
 
     public FunctionType(int line, int column, Type returnType, List<VariableDefinition> parameters) {
         super(line, column);
+
+        this.parameters = new ArrayList<>(parameters);
     }
 }
