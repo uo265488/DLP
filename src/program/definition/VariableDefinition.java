@@ -4,7 +4,7 @@ import program.AbstractASTNode;
 import program.statement.Statement;
 import program.type.Type;
 
-public class VariableDefinition extends AbstractASTNode implements Definition, Statement {
+public class VariableDefinition extends AbstractASTNode implements Definition {
 
     public Type type;
     public String name;
