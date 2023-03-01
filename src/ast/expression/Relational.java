@@ -14,5 +14,6 @@ public class Relational extends AbstractASTNode implements Expression {
 
         this.op1 = op1;
         this.op2 = op2;
+        this.operator = operator;
     }
 }

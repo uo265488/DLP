@@ -23,7 +23,11 @@ main returns [FunctionDefinition ast] locals [List<Statement> sts = new ArrayLis
 
     { $ast = new FunctionDefinition($v.ast.get(0).getLine(),
                                     $v.ast.get(0).getColumn(),
-                                    new VoidType($v.ast.get(0).getLine(), $v.ast.get(0).getColumn()),
+                                    new FunctionType($v.ast.get(0).getLine(),
+                                                     $v.ast.get(0).getColumn(),
+                                                     new VoidType($v.ast.get(0).getLine(), $v.ast.get(0).getColumn()),
+                                                     new ArrayList<VarDefinition>()),
+
                                     "main",
                                     $sts); }
 
@@ -125,7 +129,7 @@ type returns [Type ast]:
 recordFields returns [List<RecordField> ast = new ArrayList<RecordField>()]:
     (t=type ID ';'
     {
-        $ast.add(new RecordField($t.ast.getLine(), $t.ast.getColumn(), $t.ast));
+        $ast.add(new RecordField($t.ast.getLine(), $t.ast.getColumn(), $t.ast, $ID.text));
     })* //is the syntax "char f, i, g;" accepted in recordfields???
     ;
 

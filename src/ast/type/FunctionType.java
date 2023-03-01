@@ -15,5 +15,6 @@ public class FunctionType extends AbstractASTNode implements Type {
         super(line, column);
 
         this.parameters = new ArrayList<>(parameters);
+        this.returnType = returnType;
     }
 }
