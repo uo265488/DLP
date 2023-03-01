@@ -28,4 +28,12 @@ public class IfElse extends AbstractASTNode implements Statement {
         this.elseBody = new ArrayList<>();
         this.condition = condition;
     }
+
+    @Override
+    public String toString() {
+        return "IfElse ->\n\tCondition:\n" + condition.toString() + "\n\tIfBody:\n\t" +
+                ifBody.stream().map(a -> a.toString()).reduce((s, sw) -> s + "\n\t" + sw) + "\n\t"
+                + "ElseBody:\n\t" +
+                elseBody.stream().map(a -> a.toString()).reduce((s, sw) -> s + "\n\t" + sw) ;
+    }
 }

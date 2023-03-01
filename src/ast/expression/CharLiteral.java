@@ -11,4 +11,9 @@ public class CharLiteral extends AbstractASTNode implements Expression{
 
         this.value = value;
     }
+    @Override
+    public String toString() {
+        return "CharLiteral -> " + value;
+    }
+
 }

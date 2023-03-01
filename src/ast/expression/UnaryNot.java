@@ -11,4 +11,9 @@ public class UnaryNot extends AbstractASTNode implements Expression {
 
         this.expression = operand;
     }
+
+    @Override
+    public String toString() {
+        return "UnaryNot -> ! " + expression.toString();
+    }
 }

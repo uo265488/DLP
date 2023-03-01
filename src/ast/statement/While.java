@@ -17,4 +17,10 @@ public class While extends AbstractASTNode implements Statement {
         this.body = new ArrayList<>(body);
         this.condition = condition;
     }
+
+    @Override
+    public String toString() {
+        return "While ->\n\tCondition:\n" + condition.toString() + "\n\tBody:\n\t" +
+                body.stream().map(a -> a.toString()).reduce((s, sw) -> s + "\n\t" + sw) + "\n\t";
+    }
 }

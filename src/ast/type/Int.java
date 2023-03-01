@@ -8,4 +8,9 @@ public class Int extends AbstractASTNode implements Type {
     public Int(int line, int column) {
         super(line, column);
     }
+
+    @Override
+    public String toString() {
+        return "int";
+    }
 }

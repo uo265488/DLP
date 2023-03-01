@@ -13,4 +13,9 @@ public class ArrayAccess extends AbstractASTNode implements Expression {
         this.array = array;
         this.position = position;
     }
+
+    @Override
+    public String toString() {
+        return "ArrayAccess -> " + array.toString() + " [" + position + "]";
+    }
 }

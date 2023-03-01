@@ -15,4 +15,9 @@ public class Struct extends AbstractASTNode implements Type{
 
         this.recordFields = new ArrayList<>(recordFields);
     }
+
+    @Override
+    public String toString() {
+        return "Struct {\n\t" + recordFields.stream().map(s -> s.toString()).reduce((j, k) -> j + ", " + k)  ;
+    }
 }

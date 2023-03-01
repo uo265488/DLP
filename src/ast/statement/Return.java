@@ -12,4 +12,9 @@ public class Return extends AbstractASTNode implements Statement {
 
         this.expression = expression;
     }
+
+    @Override
+    public String toString() {
+        return "Return -> " + expression.toString();
+    }
 }

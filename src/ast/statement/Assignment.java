@@ -15,6 +15,9 @@ public class Assignment extends AbstractASTNode implements Statement {
         this.rightExpression = rightExpression;
     }
 
-
+    @Override
+    public String toString() {
+        return "Assignment -> " + leftExpression.toString() + " = " + rightExpression.toString();
+    }
 
 }

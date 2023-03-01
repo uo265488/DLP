@@ -17,4 +17,10 @@ public class FunctionInvocation extends AbstractASTNode implements Expression, S
         this.functionVariable = functionVariable;
         this.arguments = new ArrayList<>(arguments);
     }
+
+    @Override
+    public String toString() {
+        return "FunctionInvocation -> " + functionVariable.toString()
+                + " (" + arguments.stream().map(a -> a.toString()).reduce((s, sw) -> s + ", " + sw) + ")";
+    }
 }

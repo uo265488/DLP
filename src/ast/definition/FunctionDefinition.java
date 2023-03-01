@@ -17,6 +17,12 @@ public class FunctionDefinition extends AbstractDefinition implements Definition
 
     @Override
     public String getName() {
-        return null;
+        return name;
+    }
+
+    @Override
+    public String toString() {
+        return "FunctionDefinition:\n\t Type: " + type.toString() + ", Name: " + name + ":\n" +
+                "Body {\n" + body.stream().map(def -> def.toString()).reduce((s, d) -> s + "\n" + d) + "\n}";
     }
 }

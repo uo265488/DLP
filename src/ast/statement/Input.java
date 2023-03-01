@@ -11,4 +11,9 @@ public class Input extends AbstractASTNode implements Statement {
         super(line, column);
         this.expression = expression;
     }
+
+    @Override
+    public String toString() {
+        return "Input -> " + expression.toString();
+    }
 }

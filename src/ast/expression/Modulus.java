@@ -14,4 +14,9 @@ public class Modulus extends AbstractASTNode implements Expression {
         this.op1 = op1;
         this.op2 = op2;
     }
+
+    @Override
+    public String toString() {
+        return "Modulus -> " + op1.toString() + " % " + op2.toString();
+    }
 }

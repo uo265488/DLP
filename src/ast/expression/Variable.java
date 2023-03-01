@@ -10,4 +10,9 @@ public class Variable extends AbstractASTNode implements Expression{
         super(line, column);
         this.name = name;
     }
+
+    @Override
+    public String toString() {
+        return "Variable ->  " + name;
+    }
 }

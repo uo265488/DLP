@@ -12,4 +12,9 @@ public class RecordField extends AbstractASTNode implements Type{
         this.type = type;
         this.name = name;
     }
+    @Override
+    public String toString() {
+        return "RecordField -> " + type.toString() + name ;
+    }
+
 }
