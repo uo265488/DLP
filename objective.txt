@@ -1,1 +1,1 @@
-Implement a syntax recognizer using ANLTR. The language is described in description.txt, and an example program is provided in input.txt.
+Implement a syntax recognizer using ANLTR. The language is described in description.txt, and an example ast is provided in input.txt.

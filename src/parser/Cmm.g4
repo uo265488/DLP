@@ -1,63 +1,157 @@
-grammar Cmm;	
+grammar Cmm;
 
-program: definition+
+@header {
+import ast.*;
+import ast.definition.*;
+import ast.expression.*;
+import ast.statement.*;
+import ast.type.*;
+}
+
+program returns [Program ast] locals [List<Definition> defs = new ArrayList<Definition>();]:
+       (d=definition { $d.ast.stream().forEach(temp ->
+                                           $defs.add(temp));    })+ main EOF { $defs.add($main.ast); }
+       { $ast = new Program(0,0, $defs); }
+
        ;
 
-definition: varDefinition ';'
-        | type '{' (varDefinition ';')* (statement)* '}'
-        ;
+main returns [FunctionDefinition ast] locals [List<Statement> sts = new ArrayList<Statement>()]:
 
-statement: functionInvocation ';'
-        | 'return' expression ';' //return
-        | 'if' '(' expression ')' block ('else' block)? //if else | is it OK???
-        | 'while' '(' expression ')' block //while
-        | expression '=' expression ';' //assignment
-        | 'write' expression (',' expression)* ';'
-        | 'input' expression (',' expression)* ';'
-        ;
+    'void' 'main''('')' '{'
+    (v=varDefinition { $sts.addAll($v.ast); } ';')+
+    (s=statement { $sts.addAll($s.ast); })+ '}'
 
-block: statement
-    | '{' statement+ '}'
+    { $ast = new FunctionDefinition($v.ast.get(0).getLine(),
+                                    $v.ast.get(0).getColumn(),
+                                    new VoidType($v.ast.get(0).getLine(), $v.ast.get(0).getColumn()),
+                                    "main",
+                                    $sts); }
+
     ;
 
-expression: functionInvocation               //checked by Ortin
-            | expression '[' expression ']'
-            | expression '.' ID
-            | '(' type ')' expression //cast
-            | '-' expression //unary minus
-            | '!' expression //unary not
-            | expression ('*'|'/'|'%') expression //arithmetic and modulus
-            | expression ('+'|'-') expression //arithmetic
-            | expression ('>' | '>=' | '<' | '<=' | '!=' | '==') expression //comparison
-            | expression ('&&'|'||') expression // logic
+definition returns [List<Definition> ast = new ArrayList<Definition>()]:
+          v=varDefinition ';' { $v.ast.stream().forEach(
+                                        temp -> $ast.add(new VarDefinition(temp.getLine(), temp.getColumn(), temp.type, temp.name))); }
+        | functionDefinition
+        { $ast.add($functionDefinition.ast); }
+        ;
+
+functionDefinition returns [FunctionDefinition ast] locals [List<Statement> sts = new ArrayList<Statement>()]:
+
+    t=type ID '(' a=arguments ')' '{' (v=varDefinition { $sts.addAll($v.ast); } ';')* (s=statement { $sts.addAll($s.ast); })* '}'
+    { $ast = new FunctionDefinition($t.ast.getLine(),
+                                    $t.ast.getColumn(),
+                                    new FunctionType($t.ast.getLine(), $t.ast.getColumn(), $t.ast, $a.ast),
+                                    $ID.text,
+                                    $sts); }
+    ;
+
+statement returns [List<Statement> ast = new ArrayList<Statement>()]:
+         f=functionInvocation ';' { $ast.add($f.ast); }
+        | 'return' e1=expression ';' { $ast.add(new Return($e1.ast.getLine(), $e1.ast.getColumn(), $e1.ast)); } //return
+        | ifElse { $ast.add($ifElse.ast); } //if else | is it OK???
+        | 'while' '(' e1=expression ')' b1=block //while
+        { $ast.add(new While($e1.ast.getLine(), $e1.ast.getColumn(), $e1.ast, $b1.ast)); }
+        | e1=expression '=' e2=expression ';' { $ast.add(new Assignment($e1.ast.getLine(), $e1.ast.getColumn(), $e1.ast, $e2.ast)); }//assignment
+        | 'write' e1=expression { $ast.add(new Input($e1.ast.getLine(), $e1.ast.getColumn(), $e1.ast)); }
+          (',' e2=expression { $ast.add(new Input($e2.ast.getLine(), $e2.ast.getColumn(), $e2.ast)); } )* ';'
+        | 'read' e1=expression { $ast.add(new Print($e1.ast.getLine(), $e1.ast.getColumn(), $e1.ast)); }
+          (',' e2=expression { $ast.add(new Print($e2.ast.getLine(), $e2.ast.getColumn(), $e2.ast)); })* ';'
+        ;
+
+ifElse returns [Statement ast]:
+    'if' '(' e1=expression ')' b1=block { $ast = new IfElse($e1.ast.getLine(), $e1.ast.getColumn(), $e1.ast, $b1.ast); }
+    | 'if' '(' e1=expression ')' b1=block 'else' b2=block { $ast = new IfElse($e1.ast.getLine(), $e1.ast.getColumn(), $e1.ast, $b1.ast, $b2.ast); }
+    ;
+
+/*block returns [List<Statement> ast = new ArrayList<Statement>()]:
+    s1=statement { $ast.add($s1.ast); }
+    | '{' (s2=statement { $ast.add($s2.ast); } )+ '}'
+    ;*/
+
+block returns [List<Statement> ast = new ArrayList<Statement>()]:
+    s1=statement { $s1.ast.stream().forEach(temp -> $ast.add(temp)); }
+    | '{' (s2=statement { $s2.ast.stream().forEach(temp -> $ast.add(temp)); } )+ '}'
+    ;
+
+expression returns [Expression ast]: //checked by Ortin
+            functionInvocation
+            { $ast = $functionInvocation.ast; }
+            | e1=expression '[' e2=expression ']'
+            { $ast = new ArrayAccess($e1.ast.getLine(), $e1.ast.getColumn(), $e1.ast, $e2.ast); }
+            | e=expression '.' ID
+            { $ast = new FieldAccess($e.ast.getLine(), $e.ast.getColumn(), $e.ast, $ID.text); }
+            | '(' t1=type ')' e=expression //cast
+            { $ast = new Cast($t1.ast.getLine(), $t1.ast.getColumn(), $t1.ast, $e.ast); }
+            | '-' e1=expression //unary minus
+            { $ast = new UnaryMinus($e1.ast.getLine(), $e1.ast.getColumn(), $e1.ast); }
+            | '!' e1=expression //unary not
+            { $ast = new UnaryNot($e1.ast.getLine(), $e1.ast.getColumn(), $e1.ast); }
+            | e1=expression op=('*'|'/'|'%') e2=expression //arithmetic and modulus //HOW TO GET MODULUS
+            {
+                $ast = new Arithmetic($e1.ast.getLine(), $e1.ast.getColumn(), $e1.ast, $op.text, $e2.ast);
+            }
+            | e1=expression op=('+'|'-') e2=expression //arithmetic
+            { $ast = new Arithmetic($e1.ast.getLine(), $e1.ast.getColumn(), $e1.ast, $op.text, $e2.ast); }
+            | e1=expression op=('>' | '>=' | '<' | '<=' | '!=' | '==') e2=expression //comparison
+            { $ast = new Relational($e1.ast.getLine(), $e1.ast.getColumn(), $e1.ast, $op.text, $e2.ast); }
+            | e1=expression op=('&&'|'||') e2=expression // logic
+            { $ast = new Logic($e1.ast.getLine(), $e1.ast.getColumn(), $e1.ast, $op.text, $e2.ast); }
             | ID  //Variable
-            | INT_CONSTANT //Int_literal
-            | REAL_CONSTANT //Double_literal
-            | CHAR_CONSTANT //Char_literal
+            { $ast = new Variable($ID.getLine(), $ID.getCharPositionInLine() + 1, $ID.text); }
+            | i1=INT_CONSTANT //Int_literal
+            { $ast = new IntLiteral($i1.getLine(), $i1.getCharPositionInLine() + 1, LexerHelper.lexemeToInt($i1.text)); }
+            | r1=REAL_CONSTANT //Double_literal
+            { $ast = new DoubleLiteral($r1.getLine(), $r1.getCharPositionInLine() + 1, LexerHelper.lexemeToReal($r1.text)); }
+            | c1=CHAR_CONSTANT //Char_literal
+            { $ast = new CharLiteral($c1.getLine(), $c1.getCharPositionInLine() + 1, LexerHelper.lexemeToChar($c1.text)); }
             ;
 
-type: 'struct' '{' recordFields '}'
-    | type ID '(' arguments? ')'
-    | type '[' INT_CONSTANT ']' //array type
-    | 'int'
-    | 'double'
-    | 'char'
-    | 'void'
+type returns [Type ast]:
+    'struct' '{' r=recordFields '}'
+    { $ast = new Struct($r.ast.get(0).getLine(), $r.ast.get(0).getColumn(), $r.ast); }
+    | t1=type '[' i=INT_CONSTANT ']' //array type
+    { $ast = new ArrayType($t1.ast.getLine(), $t1.ast.getColumn(), $t1.ast, LexerHelper.lexemeToInt($i.text)); }
+    | s='int'
+    { $ast = new Int($s.getLine(), $s.getCharPositionInLine() + 1); }
+    | s='double'
+    { $ast = new Real($s.getLine(), $s.getCharPositionInLine() + 1); }
+    | s='char'
+    { $ast = new Char($s.getLine(), $s.getCharPositionInLine() + 1); }
+    | s='void'
+    { $ast = new VoidType($s.getLine(), $s.getCharPositionInLine() + 1); }
     ;
 
-recordFields: (type ID ';')* //is the syntax "char f, i, g;" accepted in recordfields???
+recordFields returns [List<RecordField> ast = new ArrayList<RecordField>()]:
+    (t=type ID ';'
+    {
+        $ast.add(new RecordField($t.ast.getLine(), $t.ast.getColumn(), $t.ast));
+    })* //is the syntax "char f, i, g;" accepted in recordfields???
     ;
 
-functionInvocation: ID '(' parameters? ')'
+functionInvocation returns [FunctionInvocation ast] locals [List<Expression> params = new ArrayList<Expression>()]:
+                    ID '(' (p=parameters { $params.addAll($p.ast); } )? ')'
+                    { $ast = new FunctionInvocation($ID.getLine(), $ID.getCharPositionInLine()+1,
+                                                    new Variable($ID.getLine(), $ID.getCharPositionInLine()+1, $ID.text),
+                                                    $params);
+                    }
                     ;
 
-parameters: expression (',' expression)*
+parameters returns [List<Expression> ast = new ArrayList<Expression>()]:
+    e1=expression { $ast.add($e1.ast); }
+    (',' e2=expression { $ast.add($e2.ast); })*
     ;
 
-arguments: (varDefinition) (',' varDefinition)*
+arguments returns [List<VarDefinition> ast = new ArrayList<VarDefinition>()]:
+    (
+    (t=type id1=ID { $ast.add(new VarDefinition($t.ast.getLine(), $t.ast.getColumn(), $t.ast, $id1.text)); })
+    (',' t2=type id2=ID { $ast.add(new VarDefinition($t2.ast.getLine(), $t2.ast.getColumn(), $t2.ast, $id2.text)); })*
+    )?
     ;
 
-varDefinition: type ID (',' ID)*  //the UML is uncompleted (missing relation with variable)
+varDefinition returns [List<VarDefinition> ast = new ArrayList<VarDefinition>()]:
+    t=type id1=ID { $ast.add(new VarDefinition($t.ast.getLine(), $t.ast.getColumn(), $t.ast, $id1.text)); }
+    (',' id2=ID { $ast.add(new VarDefinition($t.ast.getLine(), $t.ast.getColumn(), $t.ast, $id2.text)); })*  //the UML is uncompleted (missing relation with variable)
     ;
 
 ID: ([a-zA-Z] | '_') ([a-zA-Z] | '_' | DIGIT)* //is it mandatory the second part??
