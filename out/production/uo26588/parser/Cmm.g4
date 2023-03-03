@@ -10,7 +10,7 @@ import ast.type.*;
 
 program returns [Program ast] locals [List<Definition> defs = new ArrayList<Definition>();]:
        (d=definition { $d.ast.stream().forEach(temp ->
-                                           $defs.add(temp));    })+ main EOF { $defs.add($main.ast); }
+                                           $defs.add(temp));    })* main EOF { $defs.add($main.ast); }
        { $ast = new Program(0,0, $defs); }
 
        ;
@@ -42,7 +42,7 @@ definition returns [List<Definition> ast = new ArrayList<Definition>()]:
 
 functionDefinition returns [FunctionDefinition ast] locals [List<Statement> sts = new ArrayList<Statement>()]:
 
-    t=type ID '(' a=arguments ')' '{' (v=varDefinition { $sts.addAll($v.ast); } ';')* (s=statement { $sts.addAll($s.ast); })* '}'
+    t=returnType ID '(' a=arguments ')' '{' (v=varDefinition { $sts.addAll($v.ast); } ';')* (s=statement { $sts.addAll($s.ast); })* '}'
     { $ast = new FunctionDefinition($t.ast.getLine(),
                                     $t.ast.getColumn(),
                                     new FunctionType($t.ast.getLine(), $t.ast.getColumn(), $t.ast, $a.ast),
@@ -61,6 +61,7 @@ statement returns [List<Statement> ast = new ArrayList<Statement>()]:
           (',' e2=expression { $ast.add(new Input($e2.ast.getLine(), $e2.ast.getColumn(), $e2.ast)); } )* ';'
         | 'read' e1=expression { $ast.add(new Print($e1.ast.getLine(), $e1.ast.getColumn(), $e1.ast)); }
           (',' e2=expression { $ast.add(new Print($e2.ast.getLine(), $e2.ast.getColumn(), $e2.ast)); })* ';'
+        /* VAR DEFINITION ??????*/
         ;
 
 ifElse returns [Statement ast]:
@@ -93,7 +94,7 @@ expression returns [Expression ast]: //checked by Ortin
             { $ast = new UnaryNot($e1.ast.getLine(), $e1.ast.getColumn(), $e1.ast); }
             | e1=expression op=('*'|'/'|'%') e2=expression //arithmetic and modulus //HOW TO GET MODULUS
             {
-                $ast = new Arithmetic($e1.ast.getLine(), $e1.ast.getColumn(), $e1.ast, $op.text, $e2.ast);
+                $ast = LexerHelper.getArithmeticOrModulus($e1.ast.getLine(), $e1.ast.getColumn(), $e1.ast, $op.text, $e2.ast);
             }
             | e1=expression op=('+'|'-') e2=expression //arithmetic
             { $ast = new Arithmetic($e1.ast.getLine(), $e1.ast.getColumn(), $e1.ast, $op.text, $e2.ast); }
@@ -116,6 +117,11 @@ type returns [Type ast]:
     { $ast = new Struct($r.ast.get(0).getLine(), $r.ast.get(0).getColumn(), $r.ast); }
     | t1=type '[' i=INT_CONSTANT ']' //array type
     { $ast = new ArrayType($t1.ast.getLine(), $t1.ast.getColumn(), $t1.ast, LexerHelper.lexemeToInt($i.text)); }
+    | builtIn
+    { $ast = $builtIn.ast; }
+    ;
+
+returnType returns [Type ast]:
     | s='int'
     { $ast = new Int($s.getLine(), $s.getCharPositionInLine() + 1); }
     | s='double'
@@ -124,6 +130,15 @@ type returns [Type ast]:
     { $ast = new Char($s.getLine(), $s.getCharPositionInLine() + 1); }
     | s='void'
     { $ast = new VoidType($s.getLine(), $s.getCharPositionInLine() + 1); }
+    ;
+
+builtIn returns [Type ast]:
+     s='int'
+    { $ast = new Int($s.getLine(), $s.getCharPositionInLine() + 1); }
+    | s='double'
+    { $ast = new Real($s.getLine(), $s.getCharPositionInLine() + 1); }
+    | s='char'
+    { $ast = new Char($s.getLine(), $s.getCharPositionInLine() + 1); }
     ;
 
 recordFields returns [List<RecordField> ast = new ArrayList<RecordField>()]:
@@ -148,8 +163,8 @@ parameters returns [List<Expression> ast = new ArrayList<Expression>()]:
 
 arguments returns [List<VarDefinition> ast = new ArrayList<VarDefinition>()]:
     (
-    (t=type id1=ID { $ast.add(new VarDefinition($t.ast.getLine(), $t.ast.getColumn(), $t.ast, $id1.text)); })
-    (',' t2=type id2=ID { $ast.add(new VarDefinition($t2.ast.getLine(), $t2.ast.getColumn(), $t2.ast, $id2.text)); })*
+    (t=builtIn id1=ID { $ast.add(new VarDefinition($t.ast.getLine(), $t.ast.getColumn(), $t.ast, $id1.text)); })
+    (',' t2=builtIn id2=ID { $ast.add(new VarDefinition($t2.ast.getLine(), $t2.ast.getColumn(), $t2.ast, $id2.text)); })*
     )?
     ;
 
