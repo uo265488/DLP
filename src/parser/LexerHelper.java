@@ -1,5 +1,9 @@
 package parser;
 
+import ast.expression.Arithmetic;
+import ast.expression.Expression;
+import ast.expression.Modulus;
+
 public class LexerHelper {
 	
 	public static int lexemeToInt(String str) {
@@ -37,6 +41,15 @@ public class LexerHelper {
 			return (char)Integer.parseInt(str.substring(2));
 		}
 		else return str.charAt(1);
+	}
+
+	public static Expression getArithmeticOrModulus
+			(int line, int col, Expression leftOp, String operator, Expression rightOp) {
+
+		return operator.equals("%")
+				? new Modulus(line, col, leftOp, rightOp)
+				: new Arithmetic(line, col, leftOp, operator, rightOp);
+
 	}
 
 
