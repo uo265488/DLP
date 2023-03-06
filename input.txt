@@ -23,7 +23,7 @@ void main() {
     char character;
   } pair;
   // * Array
-  int[10][5] vector;
+  int[10][3][5] vector;
   
   i=0;
   j=0;

@@ -775,7 +775,7 @@ public class CmmParser extends Parser {
 		public ExpressionContext e1;
 		public ExpressionContext e;
 		public FunctionInvocationContext functionInvocation;
-		public TypeContext t1;
+		public BuiltInContext t1;
 		public Token ID;
 		public Token i1;
 		public Token r1;
@@ -785,8 +785,8 @@ public class CmmParser extends Parser {
 		public FunctionInvocationContext functionInvocation() {
 			return getRuleContext(FunctionInvocationContext.class,0);
 		}
-		public TypeContext type() {
-			return getRuleContext(TypeContext.class,0);
+		public BuiltInContext builtIn() {
+			return getRuleContext(BuiltInContext.class,0);
 		}
 		public List<ExpressionContext> expression() {
 			return getRuleContexts(ExpressionContext.class);
@@ -835,7 +835,7 @@ public class CmmParser extends Parser {
 				setState(195);
 				match(T__2);
 				setState(196);
-				((ExpressionContext)_localctx).t1 = type(0);
+				((ExpressionContext)_localctx).t1 = builtIn();
 				setState(197);
 				match(T__3);
 				setState(198);
@@ -1133,7 +1133,7 @@ public class CmmParser extends Parser {
 					((TypeContext)_localctx).i = match(INT_CONSTANT);
 					setState(269);
 					match(T__16);
-					 ((TypeContext)_localctx).ast =  new ArrayType(((TypeContext)_localctx).t1.ast.getLine(), ((TypeContext)_localctx).t1.ast.getColumn(), ((TypeContext)_localctx).t1.ast, LexerHelper.lexemeToInt((((TypeContext)_localctx).i!=null?((TypeContext)_localctx).i.getText():null))); 
+					 ((TypeContext)_localctx).ast =  ArrayType.createArray(((TypeContext)_localctx).t1.ast.getLine(), ((TypeContext)_localctx).t1.ast.getColumn(), ((TypeContext)_localctx).t1.ast, LexerHelper.lexemeToInt((((TypeContext)_localctx).i!=null?((TypeContext)_localctx).i.getText():null))); 
 					}
 					} 
 				}
@@ -1771,7 +1771,7 @@ public class CmmParser extends Parser {
 		"\u0000\u00be\r\u0001\u0000\u0000\u0000\u00bf\u00c0\u0006\u0007\uffff\uffff"+
 		"\u0000\u00c0\u00c1\u0003\u0018\f\u0000\u00c1\u00c2\u0006\u0007\uffff\uffff"+
 		"\u0000\u00c2\u00da\u0001\u0000\u0000\u0000\u00c3\u00c4\u0005\u0003\u0000"+
-		"\u0000\u00c4\u00c5\u0003\u0010\b\u0000\u00c5\u00c6\u0005\u0004\u0000\u0000"+
+		"\u0000\u00c4\u00c5\u0003\u0014\n\u0000\u00c5\u00c6\u0005\u0004\u0000\u0000"+
 		"\u00c6\u00c7\u0003\u000e\u0007\u000b\u00c7\u00c8\u0006\u0007\uffff\uffff"+
 		"\u0000\u00c8\u00da\u0001\u0000\u0000\u0000\u00c9\u00ca\u0005\u0013\u0000"+
 		"\u0000\u00ca\u00cb\u0003\u000e\u0007\n\u00cb\u00cc\u0006\u0007\uffff\uffff"+

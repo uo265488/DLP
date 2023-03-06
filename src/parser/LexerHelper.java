@@ -3,6 +3,7 @@ package parser;
 import ast.expression.Arithmetic;
 import ast.expression.Expression;
 import ast.expression.Modulus;
+import ast.type.ArrayType;
 
 public class LexerHelper {
 	
@@ -51,8 +52,5 @@ public class LexerHelper {
 				: new Arithmetic(line, col, leftOp, operator, rightOp);
 
 	}
-
-
-
 	
 }
