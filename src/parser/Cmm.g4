@@ -17,21 +17,22 @@ program returns [Program ast] locals [List<Definition> defs = new ArrayList<Defi
 
 main returns [FunctionDefinition ast] locals [List<Statement> sts = new ArrayList<Statement>()]:
 
-    'void' 'main''('')' '{'
-    (v=varDefinition { $sts.addAll($v.ast); } ';')+
-    (s=statement { $sts.addAll($s.ast); })+ '}'
+    x='void' 'main''('')' '{'
+    (v=varDefinition { $sts.addAll($v.ast); } ';')*
+    (s=statement { $sts.addAll($s.ast); })* '}'
 
-    { $ast = new FunctionDefinition($v.ast.get(0).getLine(),
-                                    $v.ast.get(0).getColumn(),
-                                    new FunctionType($v.ast.get(0).getLine(),
-                                                     $v.ast.get(0).getColumn(),
-                                                     new VoidType($v.ast.get(0).getLine(), $v.ast.get(0).getColumn()),
+    { $ast = new FunctionDefinition($x.getLine(),
+                                    $x.getCharPositionInLine()+1,
+                                    new FunctionType($x.getLine(),
+                                                     $x.getCharPositionInLine()+1,
+                                                     new VoidType($x.getLine(), $x.getCharPositionInLine()+1),
                                                      new ArrayList<VarDefinition>()),
 
                                     "main",
                                     $sts); }
 
     ;
+
 
 definition returns [List<Definition> ast = new ArrayList<Definition>()]:
           v=varDefinition ';' { $v.ast.stream().forEach(
@@ -112,9 +113,9 @@ expression returns [Expression ast]: //checked by Ortin
             { $ast = new CharLiteral($c1.getLine(), $c1.getCharPositionInLine() + 1, LexerHelper.lexemeToChar($c1.text)); }
             ;
 
-type returns [Type ast]:
-    'struct' '{' r=recordFields '}' //struct
-    { $ast = new Struct($r.ast.get(0).getLine(), $r.ast.get(0).getColumn(), $r.ast); }
+type returns [Type ast] locals [List<RecordField> fields = new ArrayList<RecordField>()]:
+    'struct' '{' (r=recordFields { $fields.addAll($r.ast); } )* '}' //struct
+    { $ast = new Struct($fields.get(0).getLine(), $fields.get(0).getColumn(), $fields); }
     | t1=type '[' i=INT_CONSTANT ']' //array type
     { $ast = ArrayType.createArray($t1.ast.getLine(), $t1.ast.getColumn(), $t1.ast, LexerHelper.lexemeToInt($i.text)); }
     | builtIn
@@ -142,10 +143,8 @@ builtIn returns [Type ast]:
     ;
 
 recordFields returns [List<RecordField> ast = new ArrayList<RecordField>()]:
-    (t=type ID ';'
-    {
-        $ast.add(new RecordField($t.ast.getLine(), $t.ast.getColumn(), $t.ast, $ID.text));
-    })* //is the syntax "char f, i, g;" accepted in recordfields???
+    t=type id1=ID { $ast.add(new RecordField($t.ast.getLine(), $t.ast.getColumn(), $t.ast, $id1.text)); }
+    (',' id2=ID { $ast.add(new RecordField($t.ast.getLine(), $t.ast.getColumn(), $t.ast, $id2.text)); })* ';'
     ;
 
 functionInvocation returns [FunctionInvocation ast] locals [List<Expression> params = new ArrayList<Expression>()]:

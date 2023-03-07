@@ -1,3 +1,4 @@
+
 // * Variable and function definitions
 int i, j, n;
 char c;
@@ -15,7 +16,7 @@ int f(int n, double r) {
 }
 
 
-// * Lab05Main function
+// * Main function
 void main() {
   // * Record
   struct {
@@ -24,7 +25,7 @@ void main() {
   } pair;
   // * Array
   int[10][5] vector;
-  
+
   i=0;
   j=0;
   while(i<10){
@@ -34,14 +35,14 @@ void main() {
     }
   i=i+1;
   }
-  
+
   i=0;
   pair.character = '0';
   pair.integer = 48;
   while (pair.integer >= i) {
     if (pair.integer == vector[0][0] || !(int)pair.character || i%2==0)
       write 't', 'r', 'u', 'e', '\n';
-    else 
+    else
       write 'f', 'a', 'l', 's', 'e', '\n';
     i=i+1;
   }
@@ -49,5 +50,8 @@ void main() {
   vector[9][(int)4.3]=5;
   f(1, 2.2); // * Invocation as a statement
 }
+
+
+
 
 
