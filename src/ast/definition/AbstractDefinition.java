@@ -5,12 +5,10 @@ import ast.type.Type;
 
 public class AbstractDefinition extends AbstractASTNode implements Definition {
 
-    public Type type;
     public String name;
-    public AbstractDefinition(int line, int column, Type type, String name) {
+    public AbstractDefinition(int line, int column, String name) {
         super(line, column);
 
-        this.type = type;
         this.name = name;
     }
 

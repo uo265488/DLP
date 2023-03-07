@@ -86,7 +86,7 @@ expression returns [Expression ast]: //checked by Ortin
             { $ast = new ArrayAccess($e1.ast.getLine(), $e1.ast.getColumn(), $e1.ast, $e2.ast); }
             | e=expression '.' ID
             { $ast = new FieldAccess($e.ast.getLine(), $e.ast.getColumn(), $e.ast, $ID.text); }
-            | '(' t1=type ')' e=expression //cast
+            | '(' t1=builtIn ')' e=expression //cast
             { $ast = new Cast($t1.ast.getLine(), $t1.ast.getColumn(), $t1.ast, $e.ast); }
             | '-' e1=expression //unary minus
             { $ast = new UnaryMinus($e1.ast.getLine(), $e1.ast.getColumn(), $e1.ast); }
@@ -113,10 +113,10 @@ expression returns [Expression ast]: //checked by Ortin
             ;
 
 type returns [Type ast]:
-    'struct' '{' r=recordFields '}'
+    'struct' '{' r=recordFields '}' //struct
     { $ast = new Struct($r.ast.get(0).getLine(), $r.ast.get(0).getColumn(), $r.ast); }
     | t1=type '[' i=INT_CONSTANT ']' //array type
-    { $ast = new ArrayType($t1.ast.getLine(), $t1.ast.getColumn(), $t1.ast, LexerHelper.lexemeToInt($i.text)); }
+    { $ast = ArrayType.createArray($t1.ast.getLine(), $t1.ast.getColumn(), $t1.ast, LexerHelper.lexemeToInt($i.text)); }
     | builtIn
     { $ast = $builtIn.ast; }
     ;
@@ -160,6 +160,9 @@ parameters returns [List<Expression> ast = new ArrayList<Expression>()]:
     e1=expression { $ast.add($e1.ast); }
     (',' e2=expression { $ast.add($e2.ast); })*
     ;
+
+    /* params are arguments and arguments are params
+            I decided not to change it because its just naming and I don't want to risk the code */
 
 arguments returns [List<VarDefinition> ast = new ArrayList<VarDefinition>()]:
     (
