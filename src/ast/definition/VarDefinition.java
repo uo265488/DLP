@@ -3,6 +3,7 @@ package ast.definition;
 import ast.AbstractASTNode;
 import ast.statement.Statement;
 import ast.type.Type;
+import semantic.Visitor;
 
 public class VarDefinition extends AbstractDefinition implements Statement {
 
@@ -15,5 +16,10 @@ public class VarDefinition extends AbstractDefinition implements Statement {
     @Override
     public String toString() {
         return "VarDefinition -> Type: " + type.toString() + ", Name: " + name;
+    }
+
+    @Override
+    public <TP, TR> TR accept(Visitor<TP, TR> visitor, TP p) {
+        return visitor.visit(this, p);
     }
 }

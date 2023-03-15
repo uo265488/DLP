@@ -1,6 +1,9 @@
 package ast.type;
 
 import ast.AbstractASTNode;
+import semantic.Visitor;
+
+import java.util.Objects;
 
 public class RecordField extends AbstractASTNode implements Type{
 
@@ -17,4 +20,23 @@ public class RecordField extends AbstractASTNode implements Type{
         return "RecordField -> " + type.toString() + " Name: " + name ;
     }
 
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        RecordField that = (RecordField) o;
+        return Objects.equals(name, that.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name);
+    }
+
+
+    @Override
+    public <TP, TR> TR accept(Visitor<TP, TR> visitor, TP p) {
+        return visitor.visit(this, p);
+    }
 }

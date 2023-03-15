@@ -2,6 +2,7 @@ package ast.statement;
 
 import ast.AbstractASTNode;
 import ast.expression.Expression;
+import semantic.Visitor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,5 +36,10 @@ public class IfElse extends AbstractASTNode implements Statement {
                 ifBody.stream().map(a -> a.toString()).reduce((s, sw) -> s + "\n\t" + sw) + "\n\t"
                 + "ElseBody:\n\t" +
                 elseBody.stream().map(a -> a.toString()).reduce((s, sw) -> s + "\n\t" + sw) ;
+    }
+
+    @Override
+    public <TP, TR> TR accept(Visitor<TP, TR> visitor, TP p) {
+        return visitor.visit(this, p);
     }
 }

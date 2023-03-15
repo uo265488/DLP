@@ -1,6 +1,7 @@
 package ast.type;
 
 import ast.AbstractASTNode;
+import semantic.Visitor;
 
 public class ArrayType extends AbstractASTNode implements Type {
 
@@ -24,5 +25,10 @@ public class ArrayType extends AbstractASTNode implements Type {
             return new ArrayType(line, col, ArrayType.createArray(line, col, ((ArrayType) type).type, size), ((ArrayType)type).size);
         }
         return new ArrayType(line, col, type, size);
+    }
+
+    @Override
+    public <TP, TR> TR accept(Visitor<TP, TR> visitor, TP p) {
+        return visitor.visit(this, p);
     }
 }

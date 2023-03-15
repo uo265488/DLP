@@ -62,7 +62,7 @@ statement returns [List<Statement> ast = new ArrayList<Statement>()]:
           (',' e2=expression { $ast.add(new Input($e2.ast.getLine(), $e2.ast.getColumn(), $e2.ast)); } )* ';'
         | 'read' e1=expression { $ast.add(new Print($e1.ast.getLine(), $e1.ast.getColumn(), $e1.ast)); }
           (',' e2=expression { $ast.add(new Print($e2.ast.getLine(), $e2.ast.getColumn(), $e2.ast)); })* ';'
-        /* VAR DEFINITION ??????*/
+          //not vd bc statements and vd cannot be intermingled inside function
         ;
 
 ifElse returns [Statement ast]:

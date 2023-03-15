@@ -2,11 +2,12 @@ package ast.expression;
 
 import ast.AbstractASTNode;
 import ast.statement.Statement;
+import semantic.Visitor;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class FunctionInvocation extends AbstractASTNode implements Expression, Statement {
+public class FunctionInvocation extends AbstractExpression implements Statement {
 
     public List<Expression> arguments;
     public Variable functionVariable;
@@ -22,5 +23,10 @@ public class FunctionInvocation extends AbstractASTNode implements Expression, S
     public String toString() {
         return "FunctionInvocation -> " + functionVariable.toString()
                 + " (" + arguments.stream().map(a -> a.toString()).reduce((s, sw) -> s + ", " + sw) + ")";
+    }
+
+    @Override
+    public <TP, TR> TR accept(Visitor<TP, TR> visitor, TP p) {
+        return visitor.visit(this, p);
     }
 }

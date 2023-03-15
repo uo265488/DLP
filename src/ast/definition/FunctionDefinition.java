@@ -2,11 +2,13 @@ package ast.definition;
 
 import ast.statement.Statement;
 import ast.type.FunctionType;
+import semantic.Visitor;
+
 import java.util.List;
 
 public class FunctionDefinition extends AbstractDefinition {
 
-    private final FunctionType type;
+    public final FunctionType type;
     public List<Statement> body;
 
 
@@ -25,5 +27,10 @@ public class FunctionDefinition extends AbstractDefinition {
     public String toString() {
         return "FunctionDefinition:\n\t Type: " + type.toString() + ", Name: " + name + ":\n" +
                 "Body {\n" + body.stream().map(def -> def.toString()).reduce((s, d) -> s + "\n" + d) + "\n}";
+    }
+
+    @Override
+    public <TP, TR> TR accept(Visitor<TP, TR> visitor, TP p) {
+        return visitor.visit(this, p);
     }
 }

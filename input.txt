@@ -16,11 +16,11 @@ int f(int n, double r) {
 }
 
 
-// * Main function
+// * Lab06Main function
 void main() {
   // * Record
   struct {
-    int integer;
+    int character;
     char character;
   } pair;
   // * Array

@@ -1,8 +1,9 @@
 package ast.expression;
 
 import ast.AbstractASTNode;
+import semantic.Visitor;
 
-public class DoubleLiteral extends AbstractASTNode implements Expression{
+public class DoubleLiteral extends AbstractExpression{
 
     double value;
 
@@ -17,4 +18,8 @@ public class DoubleLiteral extends AbstractASTNode implements Expression{
         return "DoubleLiteral -> " + value;
     }
 
+    @Override
+    public <TP, TR> TR accept(Visitor<TP, TR> visitor, TP p) {
+        return visitor.visit(this, p);
+    }
 }

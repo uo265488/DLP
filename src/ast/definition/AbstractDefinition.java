@@ -2,8 +2,9 @@ package ast.definition;
 
 import ast.AbstractASTNode;
 import ast.type.Type;
+import semantic.Visitor;
 
-public class AbstractDefinition extends AbstractASTNode implements Definition {
+public abstract class AbstractDefinition extends AbstractASTNode implements Definition {
 
     public String name;
     public AbstractDefinition(int line, int column, String name) {
@@ -21,4 +22,5 @@ public class AbstractDefinition extends AbstractASTNode implements Definition {
     public String toString() {
         return "";
     }
+
 }

@@ -1,8 +1,9 @@
 package ast.expression;
 
 import ast.AbstractASTNode;
+import semantic.Visitor;
 
-public class Arithmetic extends AbstractASTNode implements Expression {
+public class Arithmetic extends AbstractExpression {
 
 
     public Expression op1;
@@ -20,5 +21,10 @@ public class Arithmetic extends AbstractASTNode implements Expression {
     @Override
     public String toString() {
         return "Arithmetic -> " + op1.toString() + " " + operator + " " + op2.toString();
+    }
+
+    @Override
+    public <TP, TR> TR accept(Visitor<TP, TR> visitor, TP p) {
+        return visitor.visit(this, p);
     }
 }

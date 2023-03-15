@@ -1,8 +1,9 @@
 package ast.expression;
 
 import ast.AbstractASTNode;
+import semantic.Visitor;
 
-public class Modulus extends AbstractASTNode implements Expression {
+public class Modulus extends AbstractExpression {
 
 
     public Expression op1;
@@ -18,5 +19,10 @@ public class Modulus extends AbstractASTNode implements Expression {
     @Override
     public String toString() {
         return "Modulus -> " + op1.toString() + " % " + op2.toString();
+    }
+
+    @Override
+    public <TP, TR> TR accept(Visitor<TP, TR> visitor, TP p) {
+        return visitor.visit(this, p);
     }
 }

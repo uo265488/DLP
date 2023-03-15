@@ -2,6 +2,7 @@ package ast.statement;
 
 import ast.AbstractASTNode;
 import ast.expression.Expression;
+import semantic.Visitor;
 
 public class Input extends AbstractASTNode implements Statement {
 
@@ -15,5 +16,10 @@ public class Input extends AbstractASTNode implements Statement {
     @Override
     public String toString() {
         return "Input -> " + expression.toString();
+    }
+
+    @Override
+    public <TP, TR> TR accept(Visitor<TP, TR> visitor, TP p) {
+        return visitor.visit(this, p);
     }
 }

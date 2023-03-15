@@ -1,8 +1,9 @@
 package ast.expression;
 
 import ast.AbstractASTNode;
+import semantic.Visitor;
 
-public class ArrayAccess extends AbstractASTNode implements Expression {
+public class ArrayAccess extends AbstractExpression {
 
     public Expression array;
     public Expression position;
@@ -17,5 +18,10 @@ public class ArrayAccess extends AbstractASTNode implements Expression {
     @Override
     public String toString() {
         return "ArrayAccess -> " + array.toString() + " [" + position + "]";
+    }
+
+    @Override
+    public <TP, TR> TR accept(Visitor<TP, TR> visitor, TP p) {
+        return visitor.visit(this, p);
     }
 }

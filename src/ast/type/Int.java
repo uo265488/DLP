@@ -1,6 +1,7 @@
 package ast.type;
 
 import ast.AbstractASTNode;
+import semantic.Visitor;
 
 public class Int extends AbstractASTNode implements Type {
 
@@ -12,5 +13,10 @@ public class Int extends AbstractASTNode implements Type {
     @Override
     public String toString() {
         return "int";
+    }
+
+    @Override
+    public <TP, TR> TR accept(Visitor<TP, TR> visitor, TP p) {
+        return visitor.visit(this, p);
     }
 }

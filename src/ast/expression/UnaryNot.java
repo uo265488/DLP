@@ -1,8 +1,9 @@
 package ast.expression;
 
 import ast.AbstractASTNode;
+import semantic.Visitor;
 
-public class UnaryNot extends AbstractASTNode implements Expression {
+public class UnaryNot extends AbstractExpression {
 
     public Expression expression;
 
@@ -15,5 +16,10 @@ public class UnaryNot extends AbstractASTNode implements Expression {
     @Override
     public String toString() {
         return "UnaryNot -> ! " + expression.toString();
+    }
+
+    @Override
+    public <TP, TR> TR accept(Visitor<TP, TR> visitor, TP p) {
+        return visitor.visit(this, p);
     }
 }
