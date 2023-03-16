@@ -58,10 +58,10 @@ statement returns [List<Statement> ast = new ArrayList<Statement>()]:
         | 'while' '(' e1=expression ')' b1=block //while
         { $ast.add(new While($e1.ast.getLine(), $e1.ast.getColumn(), $e1.ast, $b1.ast)); }
         | e1=expression '=' e2=expression ';' { $ast.add(new Assignment($e1.ast.getLine(), $e1.ast.getColumn(), $e1.ast, $e2.ast)); }//assignment
-        | 'write' e1=expression { $ast.add(new Input($e1.ast.getLine(), $e1.ast.getColumn(), $e1.ast)); }
+        | 'write' e1=expression { $ast.add(new Print($e1.ast.getLine(), $e1.ast.getColumn(), $e1.ast)); }
+           (',' e2=expression { $ast.add(new Print($e2.ast.getLine(), $e2.ast.getColumn(), $e2.ast)); })* ';'
+        | 'read' e1=expression { $ast.add(new Input($e1.ast.getLine(), $e1.ast.getColumn(), $e1.ast)); }
           (',' e2=expression { $ast.add(new Input($e2.ast.getLine(), $e2.ast.getColumn(), $e2.ast)); } )* ';'
-        | 'read' e1=expression { $ast.add(new Print($e1.ast.getLine(), $e1.ast.getColumn(), $e1.ast)); }
-          (',' e2=expression { $ast.add(new Print($e2.ast.getLine(), $e2.ast.getColumn(), $e2.ast)); })* ';'
           //not vd bc statements and vd cannot be intermingled inside function
         ;
 
@@ -81,13 +81,15 @@ block returns [List<Statement> ast = new ArrayList<Statement>()]:
     ;
 
 expression returns [Expression ast]: //checked by Ortin
-            functionInvocation
+            '(' e=expression ')'
+            { $ast = $e.ast; }
+            | functionInvocation
             { $ast = $functionInvocation.ast; }
             | e1=expression '[' e2=expression ']'
             { $ast = new ArrayAccess($e1.ast.getLine(), $e1.ast.getColumn(), $e1.ast, $e2.ast); }
             | e=expression '.' ID
             { $ast = new FieldAccess($e.ast.getLine(), $e.ast.getColumn(), $e.ast, $ID.text); }
-            | '(' t1=builtIn ')' e=expression //cast
+            | '(' t1=builtIn ')'  e=expression //cast
             { $ast = new Cast($t1.ast.getLine(), $t1.ast.getColumn(), $t1.ast, $e.ast); }
             | '-' e1=expression //unary minus
             { $ast = new UnaryMinus($e1.ast.getLine(), $e1.ast.getColumn(), $e1.ast); }

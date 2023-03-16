@@ -16,6 +16,14 @@ public class TypeCheckingVisitor extends DefaultVisitorImpl<Void, Void> {
     }
 
     @Override
+    public Void visit(ArrayAccess arrayAccess, Void param) {
+        arrayAccess.setLvalue(true);
+        arrayAccess.position.accept(this, null);
+        arrayAccess.array.accept(this, null);
+        return null;
+    }
+
+    @Override
     public Void visit(Assignment assignment, Void param) {
         assignment.leftExpression.accept(this, null);
         assignment.rightExpression.accept(this, null);
