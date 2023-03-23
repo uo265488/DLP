@@ -22,4 +22,5 @@ public class VarDefinition extends AbstractDefinition implements Statement {
     public <TP, TR> TR accept(Visitor<TP, TR> visitor, TP p) {
         return visitor.visit(this, p);
     }
+
 }

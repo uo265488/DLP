@@ -7,6 +7,8 @@ import semantic.Visitor;
 public abstract class AbstractDefinition extends AbstractASTNode implements Definition {
 
     public String name;
+    public int scope = 0;
+
     public AbstractDefinition(int line, int column, String name) {
         super(line, column);
 
@@ -21,6 +23,16 @@ public abstract class AbstractDefinition extends AbstractASTNode implements Defi
     @Override
     public String toString() {
         return "";
+    }
+
+    @Override
+    public int getScope() {
+        return this.scope;
+    }
+
+    @Override
+    public void setScope(int scope) {
+        this.scope = scope;
     }
 
 }

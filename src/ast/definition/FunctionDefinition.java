@@ -23,6 +23,8 @@ public class FunctionDefinition extends AbstractDefinition {
         return name;
     }
 
+
+
     @Override
     public String toString() {
         return "FunctionDefinition:\n\t Type: " + type.toString() + ", Name: " + name + ":\n" +
