@@ -7,6 +7,7 @@ import org.antlr.v4.runtime.CharStreams;
 import org.antlr.v4.runtime.CommonTokenStream;
 import parser.CmmLexer;
 import parser.CmmParser;
+import semantic.IdentificationVisitor;
 import semantic.TypeCheckingVisitor;
 
 public class Main {
@@ -26,6 +27,8 @@ public class Main {
 
             Program ast = parser.program().ast;
 
+            IdentificationVisitor idv = new IdentificationVisitor();
+            idv.visit(ast, null);
             TypeCheckingVisitor tcv = new TypeCheckingVisitor();
             tcv.visit(ast, null);
             //SystemLookup ErrorHandler;

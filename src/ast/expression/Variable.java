@@ -1,11 +1,13 @@
 package ast.expression;
 
 import ast.AbstractASTNode;
+import ast.definition.Definition;
 import semantic.Visitor;
 
 public class Variable extends AbstractExpression{
 
-    String name;
+    public String name;
+    public Definition definition;
 
     public Variable(int line, int column, String name) {
         super(line, column);

@@ -31,17 +31,17 @@ public class SymbolTable {
 			definition.setScope(this.scope);
 			return true;
 		} else {
-			ErrorHandler.getInstance().addError(
-					new ErrorType(
-							definition.getLine(),
-							definition.getColumn(),
-							"Already exists a variable named: " + definition.getName() + " in this scope. "));
+			new ErrorType(
+					definition.getLine(),
+					definition.getColumn(),
+							"Already exists a variable named: " + definition.getName() + " in this scope. ");
 		}
 		return false;
 	}
 	
 	public Definition find(String id) {
 		Definition def;
+		//Should this list be traversed in the other way around???
 		for (Map<String, Definition> map : table) {
 			def = map.get(id);
 			if(def != null) {

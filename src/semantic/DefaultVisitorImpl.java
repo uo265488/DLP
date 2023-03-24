@@ -167,6 +167,8 @@ public abstract class DefaultVisitorImpl<TP, TR> implements Visitor<TP, TR> {
 
     @Override
     public TR visit(FunctionType functionType, TP param) {
+        functionType.returnType.accept(this, null);
+        functionType.parameters.stream().forEach(p -> p.accept(this, null));
         return null;
     }
 
