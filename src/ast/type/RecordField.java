@@ -5,7 +5,7 @@ import semantic.Visitor;
 
 import java.util.Objects;
 
-public class RecordField extends AbstractASTNode implements Type{
+public class RecordField extends AbstractTypeImpl {
 
     public Type type;
     public String name;

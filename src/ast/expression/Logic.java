@@ -17,7 +17,6 @@ public class Logic extends AbstractExpression {
         this.op2 = op2;
         this.operator = operator;
     }
-
     @Override
     public String toString() {
         return "Logic -> " + op1.toString() + " " + operator + " " + op2.toString();
@@ -25,6 +24,6 @@ public class Logic extends AbstractExpression {
 
     @Override
     public <TP, TR> TR accept(Visitor<TP, TR> visitor, TP p) {
-        return null;
+        return visitor.visit(this, p);
     }
 }

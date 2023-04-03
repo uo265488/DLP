@@ -1,16 +1,15 @@
 package ast.definition;
 
-import ast.AbstractASTNode;
 import ast.statement.Statement;
 import ast.type.Type;
 import semantic.Visitor;
 
 public class VarDefinition extends AbstractDefinition implements Statement {
 
-    public Type type;
+    public Type returnType;
     public VarDefinition(int line, int column, Type varType, String name) {
         super(line, column,  name);
-        this.type = varType;
+        super.type = varType;
     }
 
     @Override
@@ -23,4 +22,13 @@ public class VarDefinition extends AbstractDefinition implements Statement {
         return visitor.visit(this, p);
     }
 
+    @Override
+    public Type getReturnType() {
+        return returnType;
+    }
+
+    @Override
+    public void setReturnType(Type returnType) {
+        this.returnType = returnType;
+    }
 }

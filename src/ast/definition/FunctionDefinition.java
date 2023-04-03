@@ -15,6 +15,7 @@ public class FunctionDefinition extends AbstractDefinition {
     public FunctionDefinition(int line, int column, FunctionType varType, String name, List<Statement> body) {
         super(line, column, name);
         this.body = body;
+        super.type = varType;
         this.type = varType;
     }
 

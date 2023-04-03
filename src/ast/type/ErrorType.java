@@ -1,11 +1,12 @@
 package ast.type;
 
+import ast.ASTNode;
 import ast.AbstractASTNode;
 import errorhandler.ErrorHandler;
 import semantic.Visitor;
 import utils.ArgumentChecks;
 
-public class ErrorType extends AbstractASTNode implements Type {
+public class ErrorType extends AbstractTypeImpl {
 
     public String message;
 
@@ -32,4 +33,10 @@ public class ErrorType extends AbstractASTNode implements Type {
     public <TP, TR> TR accept(Visitor<TP, TR> visitor, TP p) {
         return visitor.visit(this, p);
     }
+
+    @Override
+    public Type mustBeBuiltIn(ASTNode astNode) {
+        return this; //just for not showing two messages
+    }
+
 }
