@@ -1,4 +1,5 @@
 import ast.Program;
+import codegeneration.OffsetVisitor;
 import errorhandler.ErrorHandler;
 import introspector.model.IntrospectorModel;
 import introspector.view.IntrospectorView;
@@ -31,6 +32,8 @@ public class Main {
             idv.visit(ast, null);
             TypeCheckingVisitor tcv = new TypeCheckingVisitor();
             tcv.visit(ast, null);
+            OffsetVisitor offsetVisitor = new OffsetVisitor();
+            offsetVisitor.visit(ast, null);
             //SystemLookup ErrorHandler;
 
             if (ErrorHandler.getInstance().anyErrors())

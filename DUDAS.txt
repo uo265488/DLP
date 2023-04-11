@@ -1,0 +1,10 @@
+DUDAS:
+- Si para el read se necesita un built in, un field access se puede utilizar??? es un fieldaccess un lvalue??
+- Error type no es builti, entonces saltan dos errores a veces, se deja asi???
+- Si hay varios metodos con el mismo nombre pero distinto numero de parametros, al comprobar el numero de par
+parametros/arguments da error. Como manejo eso?
+- No se comprobar si un array access es bidimensional o no
+- FieldAccess es un Lvalue????
+- Uso de .dot() en type para el fieldAccess
+
+- RECORDFIELD NO ES UN TYPE=????? Lo tengo como type
