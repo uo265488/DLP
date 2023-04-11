@@ -20,6 +20,11 @@ public class Char extends AbstractTypeImpl {
     }
 
     @Override
+    public int getNumberOfBytes() {
+        return 1;
+    }
+
+    @Override
     public Type arithmetic(Type type, ASTNode astNode) {
         if(type instanceof Char) {
             return new Char(astNode.getLine(), astNode.getColumn());

@@ -46,4 +46,9 @@ public class Struct extends AbstractTypeImpl {
         return new ErrorType(astNode.getLine(), astNode.getColumn(),
                 "No recordField with such name: " + fieldName);
     }
+
+    @Override
+    public int getNumberOfBytes() {
+        return recordFields.stream().map(r -> r.type.getNumberOfBytes()).reduce((n1, n2) -> n1 + n2).get();
+    }
 }

@@ -15,6 +15,11 @@ public class Real extends AbstractTypeImpl {
     }
 
     @Override
+    public int getNumberOfBytes() {
+        return 4;
+    }
+
+    @Override
     public <TP, TR> TR accept(Visitor<TP, TR> visitor, TP p) {
         return null;
     }

@@ -6,6 +6,8 @@ import ast.expression.FieldAccess;
 import java.util.List;
 
 public interface Type extends ASTNode {
+
+    int getNumberOfBytes();
     Type arithmetic(Type type, ASTNode astNode);
     Type logical(Type type, ASTNode astNode);
     Type relational(Type type, ASTNode astNode);

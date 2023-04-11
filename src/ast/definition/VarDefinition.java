@@ -7,6 +7,8 @@ import semantic.Visitor;
 public class VarDefinition extends AbstractDefinition implements Statement {
 
     public Type returnType;
+    public int offset;
+
     public VarDefinition(int line, int column, Type varType, String name) {
         super(line, column,  name);
         super.type = varType;

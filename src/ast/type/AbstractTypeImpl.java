@@ -16,6 +16,11 @@ public abstract class AbstractTypeImpl extends AbstractASTNode implements Type {
     }
 
     @Override
+    public int getNumberOfBytes() {
+        throw new RuntimeException("It is not possible to getNumberOfBytes of this type. ");
+    }
+
+    @Override
     public Type logical(Type type, ASTNode astNode) {
         return new ErrorType(astNode.getLine(), astNode.getColumn(), "Incompatible types for logical. ");
     }

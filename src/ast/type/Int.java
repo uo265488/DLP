@@ -26,6 +26,11 @@ public class Int extends AbstractTypeImpl {
     }
 
     @Override
+    public int getNumberOfBytes() {
+        return 2;
+    }
+
+    @Override
     public Type arithmetic(Type type, ASTNode astNode) {
         if(type instanceof Int) {
             return new Int(astNode.getLine(), astNode.getColumn());

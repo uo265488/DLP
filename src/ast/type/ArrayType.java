@@ -19,6 +19,11 @@ public class ArrayType extends AbstractTypeImpl {
     }
 
     @Override
+    public int getNumberOfBytes() {
+        return size * type.getNumberOfBytes();
+    }
+
+    @Override
     public String toString() {
         return "ArrayType -> " + type.toString() + " [" + size + "]";
     }

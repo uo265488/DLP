@@ -9,6 +9,7 @@ public class RecordField extends AbstractTypeImpl {
 
     public Type type;
     public String name;
+    public int offset;
     public RecordField(int line, int column, Type type, String name) {
         super(line, column);
 
