@@ -20,6 +20,11 @@ public class Real extends AbstractTypeImpl {
     }
 
     @Override
+    public char getSuffix() {
+        return 'f';
+    }
+
+    @Override
     public <TP, TR> TR accept(Visitor<TP, TR> visitor, TP p) {
         return null;
     }

@@ -1,11 +1,11 @@
 package ast.type;
 
 import ast.ASTNode;
-import ast.AbstractASTNode;
 import semantic.Visitor;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class Struct extends AbstractTypeImpl {
 
@@ -50,5 +50,15 @@ public class Struct extends AbstractTypeImpl {
     @Override
     public int getNumberOfBytes() {
         return recordFields.stream().map(r -> r.type.getNumberOfBytes()).reduce((n1, n2) -> n1 + n2).get();
+    }
+
+    public RecordField getRecordField(String fieldname) {
+        RecordField recordField = null;
+        for (RecordField rf : recordFields) {
+            if(rf.name.equals(fieldname)) {
+                recordField = rf;
+            }
+        }
+        return recordField;
     }
 }

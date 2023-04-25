@@ -5,7 +5,7 @@ import semantic.Visitor;
 
 public class DoubleLiteral extends AbstractExpression{
 
-    double value;
+    public double value;
 
     public DoubleLiteral(int line, int column, double value) {
         super(line, column);

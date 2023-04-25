@@ -11,6 +11,11 @@ public abstract class AbstractTypeImpl extends AbstractASTNode implements Type {
     }
 
     @Override
+    public char getSuffix() {
+        throw new RuntimeException("No offset available for this Type. ");
+    }
+
+    @Override
     public Type arithmetic(Type type, ASTNode astNode) {
         return new ErrorType(astNode.getLine(), astNode.getColumn(), "Incompatible types for aritmetic. ");
     }

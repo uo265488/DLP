@@ -3,6 +3,14 @@ package codegeneration;
 public class ExecuteCGVisitor extends DefaultCGVisitorImpl<ReturnSequenceDto, ReturnSequenceDto> {
 
     /**
+     *  execute[[ VariableDefinition : vardefinition -> type ID ]] =
+     *          if( vardefinition.scope() == 0) {
+     *
+     *          }
+     *
+     */
+
+    /**
      *  execute[[ Read : stmnt -> exp ]] =
      *          address[[exp]]
      *          <in> exp.type.sufix()
@@ -22,8 +30,32 @@ public class ExecuteCGVisitor extends DefaultCGVisitorImpl<ReturnSequenceDto, Re
      *          <store> exp1.type.suffix()
      */
 
+
+
     /**
-     *  execute[[ VariableDefinition : vardefinition -> type ID ]] =
+     *  execute[[While: statement -> expression statement1*]]
+     *      String conditionLabel = cg.nextLabel(),
+     *              exitLabel = cg.nextLabel();
+     *      conditionLabel <:>
+     *      value[[expression]]
+     *      <jz > exitLabel
+     *      statement1*.forEach(stmt -> execute[[stmt]])
+     *      <jmp > conditionLabel
+     *      exitLabel<:>
+     *
+     */
+
+    /**
+     *  execute [[IfElse : statement -> exp statement2* statement3*]] =
+     *      String elseLabel = cg.nextLabel(),
+     *             exitLabel = cg.nextLabel();
+     *      value[[expression]]
+     *      <jz > elseLabel
+     *      statement2*.forEach(stmnt -> execute[[stmnt]]);
+     *      <jmp > exitLabel
+     *      elseLabel <:>
+     *      statement3*.forEach(stmnt -> execute[[stmnt]]);
+     *      exitLabel <:>
      *
      */
 }

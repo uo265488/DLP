@@ -31,6 +31,11 @@ public class Int extends AbstractTypeImpl {
     }
 
     @Override
+    public char getSuffix() {
+        return 'i';
+    }
+
+    @Override
     public Type arithmetic(Type type, ASTNode astNode) {
         if(type instanceof Int) {
             return new Int(astNode.getLine(), astNode.getColumn());

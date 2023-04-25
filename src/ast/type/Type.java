@@ -1,12 +1,12 @@
 package ast.type;
 
 import ast.ASTNode;
-import ast.expression.FieldAccess;
 
 import java.util.List;
 
 public interface Type extends ASTNode {
 
+    char getSuffix();
     int getNumberOfBytes();
     Type arithmetic(Type type, ASTNode astNode);
     Type logical(Type type, ASTNode astNode);

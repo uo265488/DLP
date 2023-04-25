@@ -25,6 +25,11 @@ public class Char extends AbstractTypeImpl {
     }
 
     @Override
+    public char getSuffix() {
+        return 'b';
+    }
+
+    @Override
     public Type arithmetic(Type type, ASTNode astNode) {
         if(type instanceof Char) {
             return new Char(astNode.getLine(), astNode.getColumn());
