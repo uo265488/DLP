@@ -18,9 +18,8 @@ public class RecordField extends AbstractTypeImpl {
     }
     @Override
     public String toString() {
-        return "RecordField -> " + type.toString() + " Name: " + name ;
+        return "(" + type.toString() + " " + name + ")";
     }
-
 
     @Override
     public boolean equals(Object o) {

@@ -40,15 +40,13 @@ public class SymbolTable {
 	}
 	
 	public Definition find(String id) {
-		Definition def;
-		//Should this list be traversed in the other way around???
+		Definition def = null;
 		for (Map<String, Definition> map : table) {
-			def = map.get(id);
-			if(def != null) {
-				return def;
+			if(map.get(id) != null) {
+				def = map.get(id);
 			}
 		}
-		return null;
+		return def;
 	}
 
 	public Definition findInCurrentScope(String id) {

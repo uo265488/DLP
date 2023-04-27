@@ -23,11 +23,6 @@ public class ArrayType extends AbstractTypeImpl {
         return size * type.getNumberOfBytes();
     }
 
-    @Override
-    public String toString() {
-        return "ArrayType -> " + type.toString() + " [" + size + "]";
-    }
-
     public static ArrayType createArray(int line, int col, Type type, int size) {
         if(type instanceof ArrayType) {
             return new ArrayType(line, col, ArrayType.createArray(line, col, ((ArrayType) type).type, size), ((ArrayType)type).size);
@@ -55,6 +50,11 @@ public class ArrayType extends AbstractTypeImpl {
         return new ErrorType(astNode.getLine(), astNode.getColumn(),
                 "Incompatible types for assignment: " + type.getClass().getSimpleName() + " to Array of "
                         + this.type.getClass().getSimpleName());
+    }
+
+    @Override
+    public String toString() {
+        return "[" + size + "," + type.toString() + "] ";
     }
 
 }

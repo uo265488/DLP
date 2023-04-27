@@ -5,6 +5,7 @@ import semantic.Visitor;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class Struct extends AbstractTypeImpl {
@@ -30,7 +31,8 @@ public class Struct extends AbstractTypeImpl {
     }
     @Override
     public String toString() {
-        return "Struct {\n\t" + recordFields.stream().map(s -> s.toString()).reduce((j, k) -> j + ", " + k)  ;
+        Optional<String> records = recordFields.stream().map(s -> s.toString()).reduce((j, k) -> j + "x" + k);
+        return "record(" + (records.isPresent() ? records.get() : "") + ")" ;
     }
     @Override
     public <TP, TR> TR accept(Visitor<TP, TR> visitor, TP p) {

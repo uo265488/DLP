@@ -12,7 +12,7 @@ public abstract class AbstractTypeImpl extends AbstractASTNode implements Type {
 
     @Override
     public char getSuffix() {
-        throw new RuntimeException("No offset available for this Type. ");
+        throw new RuntimeException("No suffix available for this Type. ");
     }
 
     @Override

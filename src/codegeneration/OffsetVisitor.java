@@ -27,8 +27,9 @@ public class OffsetVisitor extends DefaultVisitorImpl<Void, Void> {
     @Override
     public Void visit(VarDefinition varDefinition, Void param) {
         if(varDefinition.scope == 0) {
-            globalBytesSum += varDefinition.type.getNumberOfBytes();
             varDefinition.offset = globalBytesSum;
+            globalBytesSum += varDefinition.type.getNumberOfBytes();
+
         }
 
         varDefinition.type.accept(this, null);
@@ -50,11 +51,11 @@ public class OffsetVisitor extends DefaultVisitorImpl<Void, Void> {
      */
     public Void visit(FunctionDefinition functionDefinition, Void param) {
         int localBytesSum = 0;
-        for(int i = functionDefinition.body.size() - 1; i > 0; i--) {
+        for(int i = 0; i <= functionDefinition.body.size() - 1; i++) {
             Statement st = functionDefinition.body.get(i);
             if(st instanceof VarDefinition vd) {
                 localBytesSum += vd.type.getNumberOfBytes();
-                vd.offset = localBytesSum;
+                vd.offset = -localBytesSum;
             }
         }
         functionDefinition.type.accept(this, null);
@@ -78,7 +79,7 @@ public class OffsetVisitor extends DefaultVisitorImpl<Void, Void> {
      */
     public Void visit(FunctionType functionType, Void param) {
         int paramBytesSum = 0;
-        for(int i = functionType.parameters.size() - 1; i > 0; i--) {
+        for(int i = functionType.parameters.size() - 1; i >= 0; i--) {
             VarDefinition vd = functionType.parameters.get(i);
             vd.offset = paramBytesSum + 4;
             paramBytesSum += vd.type.getNumberOfBytes();

@@ -37,8 +37,10 @@ public class AddressCGVisitor extends DefaultCGVisitorImpl<Void, Void> {
                 cg.pushAddress(varDefinition.offset);
             } else {
                 cg.pushBp();
-                cg.push(variable.type.getSuffix(), varDefinition.offset);
-                cg.add(variable.type.getSuffix());
+               // cg.push(variable.type.getSuffix(), varDefinition.offset);
+                cg.push('i', varDefinition.offset);
+                //cg.add(variable.type.getSuffix());
+                cg.add('i');
             }
         }
         return null;

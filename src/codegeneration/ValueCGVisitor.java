@@ -1,8 +1,8 @@
 package codegeneration;
 
+
 import ast.expression.*;
 import semantic.Visitor;
-
 public class ValueCGVisitor extends DefaultCGVisitorImpl<Void, Void> {
 
     private CodeGenerator cg;
@@ -12,6 +12,25 @@ public class ValueCGVisitor extends DefaultCGVisitorImpl<Void, Void> {
         this.addressCGVisitor = addressCGVisitor;
         this.cg = addressCGVisitor.getCodeGenerator();
         addressCGVisitor.setValueCGVisitor(this);
+    }
+
+
+    /**
+     * value[[Invocation: exp 1 → exp 2 exp 3 *]] =
+     *      exp3*.forEach(exp -> value[[exp]])
+     *      call exp2.name
+     */
+    @Override
+    public Void visit(FunctionInvocation functionInvocation, Void param) {
+
+        functionInvocation.arguments.forEach(a -> a.accept(this, null));
+        cg.call(functionInvocation.functionVariable.name);
+
+        return param;
+    }
+
+    public AddressCGVisitor getAddressCGVisitor() {
+        return this.addressCGVisitor;
     }
 
     /**
@@ -29,7 +48,7 @@ public class ValueCGVisitor extends DefaultCGVisitorImpl<Void, Void> {
      *          <pushf > exp.value
      */
     public Void visit(DoubleLiteral doubleLiteral, Void param) {
-        cg.push('f', doubleLiteral.value);
+        cg.pushf(doubleLiteral.value);
 
         return null;
     }
@@ -139,6 +158,8 @@ public class ValueCGVisitor extends DefaultCGVisitorImpl<Void, Void> {
      *          <not>
      */
     public Void visit(UnaryNot unaryNot, Void param) {
+        unaryNot.expression.accept(this, null);
+        cg.not();
         return null;
     }
 
@@ -147,17 +168,34 @@ public class ValueCGVisitor extends DefaultCGVisitorImpl<Void, Void> {
      *          value[[exp2]]
      *          cg.convert(exp2.type, type)
      */
+    public Void visit(Cast cast, Void param) {
+        cast.expression.accept(this, null);
+        cg.convert(cast.expression.getType(), cast.castTo);
+
+        return null;
+    }
 
     /**
      *  value[[ Indexing: exp1 -> exp2 exp3 ]] =
      *          address[[exp1]]
      *          <load> exp1.type.suffix
      */
+    public Void visit(ArrayAccess arrayAccess, Void param) {
+        arrayAccess.accept(addressCGVisitor, null);
+        cg.load(arrayAccess.type.getSuffix());
+
+        return null;
+    }
 
     /**
      *   value[[ FieldAccess : exp1 -> exp2 ID ]] =
      *          address[[exp1]]
      *          <load> exp1.type.suffix
      */
+    public Void visit(FieldAccess fieldAccess, Void param) {
+        fieldAccess.accept(addressCGVisitor, null);
+        cg.load(fieldAccess.type.getSuffix());
 
+        return null;
+    }
 }

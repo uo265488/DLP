@@ -11,7 +11,7 @@ public class Real extends AbstractTypeImpl {
 
     @Override
     public String toString() {
-        return "double";
+        return "real";
     }
 
     @Override

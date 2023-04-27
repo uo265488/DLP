@@ -10,6 +10,7 @@ import parser.CmmLexer;
 import parser.CmmParser;
 import semantic.IdentificationVisitor;
 import semantic.TypeCheckingVisitor;
+import codegeneration.*;
 
 public class Main {
         public static void main(String... args) throws Exception {
@@ -35,6 +36,14 @@ public class Main {
             OffsetVisitor offsetVisitor = new OffsetVisitor();
             offsetVisitor.visit(ast, null);
             //SystemLookup ErrorHandler;
+
+            ExecuteCGVisitor executeCGVisitor =
+                    new ExecuteCGVisitor(
+                            new ValueCGVisitor(
+                                    new AddressCGVisitor(
+                                            new CodeGenerator(args[0], args[1]))));
+
+            executeCGVisitor.visit(ast, null);
 
             if (ErrorHandler.getInstance().anyErrors())
                 ErrorHandler.getInstance().showErrors(System.err);

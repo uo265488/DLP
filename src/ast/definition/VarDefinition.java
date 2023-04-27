@@ -15,11 +15,6 @@ public class VarDefinition extends AbstractDefinition implements Statement {
     }
 
     @Override
-    public String toString() {
-        return "VarDefinition -> Type: " + type.toString() + ", Name: " + name;
-    }
-
-    @Override
     public <TP, TR> TR accept(Visitor<TP, TR> visitor, TP p) {
         return visitor.visit(this, p);
     }
@@ -32,5 +27,9 @@ public class VarDefinition extends AbstractDefinition implements Statement {
     @Override
     public void setReturnType(Type returnType) {
         this.returnType = returnType;
+    }
+
+    public String toString() {
+        return type.toString() + " " + name + " (offset " + offset + ")";
     }
 }
