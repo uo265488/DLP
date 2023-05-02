@@ -1,23 +1,23 @@
 
 #source	 "input_lab11.txt"
 
-	' * 	char c(offset 0)
-	' * 	int a(offset 1)
-	' * 	real r(offset 3)
+	' * 	char c (offset 0)
+	' * 	int a (offset 1)
+	' * 	real r (offset 3)
 	' * 	
 
 Invocation to the main function
-call main
+	call main
 halt
 
 
 
 #line	5
-main:
+  main:
 	' * 	Parameters
 	' * 	Local variables
-	' * 	int a(offset -2)
-	' * 	int i(offset -4)
+	' * 	int a (offset -2)
+	' * 	int i (offset -4)
 	enter	4
 
 #line	8
@@ -33,7 +33,7 @@ main:
 
 #line	9
 	' * 	Write
-	pushb 92
+	pushb 10
 	outb
 
 #line	11
@@ -76,7 +76,7 @@ main:
 
 #line	13
 	' * 	Write
-	pushb 92
+	pushb 10
 	outb
 
 #line	15
@@ -96,7 +96,7 @@ main:
 
 #line	16
 	' * 	Write
-	pushb 92
+	pushb 10
 	outb
 
 #line	18
@@ -150,7 +150,7 @@ main:
 
 #line	21
 	' * 	Write
-	pushb 92
+	pushb 10
 	outb
 
 #line	22
@@ -221,6 +221,6 @@ main:
 
 #line	27
 	' * 	Write
-	pushb 92
+	pushb 10
 	outb
 	ret 0, 4, 0

@@ -23,7 +23,7 @@ public class ExecuteCGVisitor extends DefaultCGVisitorImpl<ReturnSequenceDto, Re
     }
 
     /**
-     *  execute [[Program: program -> definition* ]] =
+     *  execute [[Program: program -> definition* ]](bytesReturn, bytesLocals, bytesParams) =
      *      <call main>
      *      <halt>
      *      definition*.forEach(st -> execute[[st]])
@@ -50,6 +50,20 @@ public class ExecuteCGVisitor extends DefaultCGVisitorImpl<ReturnSequenceDto, Re
         return param;
     }
 
+    /**
+     *  execute[[ FunctionDefinition : definition -> type ID stmnt* ]](bytesReturn, bytesLocals, bytesParams) =
+     *          ID <:>
+     *          functionType.parameters.forEach(p -> execute[[p]] (bytesReturn, bytesLocals, bytesParams)
+     *          stmnt*.stream().filter(st -> st instanceOf VarDefinition)
+     *                          .forEach(vd -> execute[[vd]](bytesReturn, bytesParam, bytesLocals))
+     *          <enter>
+     *          stmnt*.stream().filter(st -> !(st instanceOf VarDefinition))
+     *                          .forEach(vd -> execute[[vd]](bytesReturn, bytesParam, bytesLocals))
+     *          if(type.returnType instanceOf VoidType)
+     *              <ret > bytesReturn <, > bytesLocals <, > bytesParams
+     *
+     *
+     */
     @Override
     public ReturnSequenceDto visit(FunctionDefinition functionDefinition, ReturnSequenceDto param) {
         List<VarDefinition> locals = functionDefinition.body.stream()
@@ -78,18 +92,19 @@ public class ExecuteCGVisitor extends DefaultCGVisitorImpl<ReturnSequenceDto, Re
                 .filter(fd -> !(fd instanceof VarDefinition))
                 .forEach(st -> st.accept(this, ret));
 
-        cg.ret(ret);
+        if(functionDefinition.type.returnType instanceof VoidType)
+            cg.ret(ret);
 
         return ret;
     }
 
 
     /**
-     * execute[[Invocation: statement → exp1 exp2*]] =
+     * execute[[FunctionInvocation: statement → exp1 exp2*]](bytesReturn, bytesLocals, bytesParams) =
      *      exp2*.forEach(exp -> value[[exp]])
-     *      call exp1.name
+     *      <call > exp1.name
      *      if(!(exp1.type.returnType instanceof VoidType))
-     *          pop exp1.type.returnType.suffix()
+     *          <pop> exp1.type.returnType.suffix()
      */
     @Override
     public ReturnSequenceDto visit(FunctionInvocation functionInvocation, ReturnSequenceDto param) {
@@ -106,7 +121,7 @@ public class ExecuteCGVisitor extends DefaultCGVisitorImpl<ReturnSequenceDto, Re
 
 
     /**
-     *  execute[[ Read : stmnt -> exp ]] =
+     *  execute[[ Read : stmnt -> exp ]](bytesReturn, bytesLocals, bytesParams) =
      *          address[[exp]]
      *          <in> exp.type.sufix()
      *          <store> exp.type.suffix()
@@ -124,7 +139,7 @@ public class ExecuteCGVisitor extends DefaultCGVisitorImpl<ReturnSequenceDto, Re
     }
 
     /**
-     *  execute[[ Write : stmnt -> exp ]] =
+     *  execute[[ Write : stmnt -> exp ]](bytesReturn, bytesLocals, bytesParams) =
      *          value[[exp]]
      *          <out> exp.type.sufix()
      */
@@ -141,7 +156,7 @@ public class ExecuteCGVisitor extends DefaultCGVisitorImpl<ReturnSequenceDto, Re
     }
 
     /**
-     *  execute[[ Assignment : exp1 -> exp2 exp3 ]] =
+     *  execute[[ Assignment : exp1 -> exp2 exp3 ]](bytesReturn, bytesLocals, bytesParams) =
      *          address[[exp2]]
      *          value[[exp3]]
      *          <store> exp1.type.suffix()
@@ -158,13 +173,13 @@ public class ExecuteCGVisitor extends DefaultCGVisitorImpl<ReturnSequenceDto, Re
     }
 
     /**
-     *  execute[[While: statement -> expression statement1*]]
+     *  execute[[While: statement -> expression statement1*]](bytesReturn, bytesLocals, bytesParams)
      *      String conditionLabel = cg.nextLabel(),
      *              exitLabel = cg.nextLabel();
      *      conditionLabel <:>
      *      value[[expression]]
      *      <jz > exitLabel
-     *      statement1*.forEach(stmt -> execute[[stmt]])
+     *      statement1*.forEach(stmt -> execute[[stmt]](bytesReturn, bytesLocals, bytesParams))
      *      <jmp > conditionLabel
      *      exitLabel<:>
      *
@@ -185,15 +200,15 @@ public class ExecuteCGVisitor extends DefaultCGVisitorImpl<ReturnSequenceDto, Re
         return param;
     }
     /**
-     *  execute [[IfElse : statement -> exp statement2* statement3*]] =
+     *  execute [[IfElse : statement -> exp statement2* statement3*]](bytesReturn, bytesLocals, bytesParams) =
      *      String elseLabel = cg.nextLabel(),
      *             exitLabel = cg.nextLabel();
      *      value[[expression]]
      *      <jz > elseLabel
-     *      statement2*.forEach(stmnt -> execute[[stmnt]]);
+     *      statement2*.forEach(stmnt -> execute[[stmnt]](bytesReturn, bytesLocals, bytesParams));
      *      <jmp > exitLabel
      *      elseLabel <:>
-     *      statement3*.forEach(stmnt -> execute[[stmnt]]);
+     *      statement3*.forEach(stmnt -> execute[[stmnt]](bytesReturn, bytesLocals, bytesParams));
      *      exitLabel <:>
      */
     @Override
@@ -216,16 +231,16 @@ public class ExecuteCGVisitor extends DefaultCGVisitorImpl<ReturnSequenceDto, Re
     }
 
     /**
-     *  execute[[Return : stmnt -> exp ]] =
+     *  execute[[Return : stmnt -> exp ]] (bytesReturn, bytesLocals, bytesParams) =
      *      value[[exp]]
-     *      ret
+     *      <ret > bytesReturn <, > bytesLocals <, > bytesParams
      */
     @Override
     public ReturnSequenceDto visit(Return returnStmnt, ReturnSequenceDto param) {
         cg.line(returnStmnt.getLine());
         cg.comment("Return");
         returnStmnt.expression.accept(valueCGVisitor, null);
-
+        cg.ret(param);
         return param;
     }
 
